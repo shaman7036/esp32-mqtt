@@ -120,5 +120,5 @@ You can download them on Tools > Manage Libraries...
 ### [PubSubClient by Nick O' Leary](https://github.com/knolleary/pubsubclient)
 I'm using the latest version avaliable (2.8.0).
 
-### [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+### [ArduinoJson by Benoit Blanchon](https://github.com/bblanchon/ArduinoJson)
 I'm using the latest version avaliable (6.17.3).
