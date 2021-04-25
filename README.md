@@ -5,6 +5,10 @@ The microcontroller used was a ESP32 with a LoRaWAN module.
 
 The MQTT server was created using the Mosquitto broker on a Raspberry Pi.
 
+## TODO
+- [ ] Fix no2 and nh3 readings
+- [ ] Improve gas readings
+
 ## Create the broker and secure the connection with TLS:
 ### Installing the broker
 ```bash
