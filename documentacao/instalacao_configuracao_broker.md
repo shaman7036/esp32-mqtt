@@ -16,8 +16,9 @@ Podemos testar o sucesso da instalação nos inscrevendo em um tópico utilizand
     mosquitto_sub -t topico/de/teste
     mosquitto_pub -t topico/de/teste -m "Mensagem de Teste"
 
-![inscrição no broker](/img/1.jpeg)
-![publicação no broker](/img/2.jpeg)
+![inscrição no broker](./img/1.jpeg)
+
+![publicação no broker](./img/2.jpeg)
 
 Por padrão, o broker é instalado no diretório */etc/mosquitto* e, neste diretório, podemos encontrar outras 3 pastas e um arquivo. As 3 pastas são: *ca_certificates*, *certs* e *conf.d*. As duas primeiras são responsáveis por armazenar os certificados para gerarmos conexões seguras com criptografia e a terceira guarda os arquivos de configuração do usuário. Existe também um arquivo chamado *mosquitto.conf*, que contem algumas configurações padrões do broker. Não iremos modificar esse arquivo, e criaremos todos os arquivos de configuração na pasta *conf.d*.
 
@@ -30,11 +31,11 @@ No broker mosquitto, os usuários e senhas são cadastrados em arquivos que pode
 
 Após executado o comando, será pedido uma senha e a confirmação dessa senha. Um novo arquivo de senhas então será gerado na pasta *conf.d*, contendo esse usuário que acabamos de cadastrar.
 
-![mosquitto_paswd](/img/3.jpeg)
+![mosquitto_paswd](./img/3.jpeg)
 
 O arquivo de senhas gera o nome do usuário e a senha criptografada, desta maneira:
 
-![arquivo de senhas](/img/4.jpeg)
+![arquivo de senhas](./img/4.jpeg)
 
 O prefixo *-c* indica que um novo arquivo de senhas será criado. Se quisermos adicionar um novo usuário em um arquivo de senhas existente, basta omitir este prefixo. Para excluir um usuário do arquivo de senhas, basta utilizarmos o prefixo -D, da seguinte forma:
 
@@ -87,22 +88,24 @@ Primeiro, precisamos gerar uma chave privada de criptografia e gerar o certifica
 
 O terminal irá nos pedir uma senha para a chave privada e algumas informações para preencher o certificado. É importante colocar o IP da máquina em que o broker está instalado no campo *Common Name*. Se pode também utilizar o domínio deste servidor (se existir).
 
-![gerando a chave para o certificado da autoridade certificadora](/img/5.jpeg)
-![gerando o certificado da autoridade certificadora](/img/6.jpeg)
+![gerando a chave para o certificado da autoridade certificadora](./img/5.jpeg)
+
+![gerando o certificado da autoridade certificadora](./img/6.jpeg)
 
 Após isso, devemos gerar uma chave para o servidor e o certificado para o servidor. Novamente colocar o IP do servidor no campo *Common Name* quando requisitado.
 
 	sudo openssl genrsa -out server.key 2048
 	sudo openssl req -new -out server.csr -key server.key
 
-![gerando a chave para o certificado do servidor](/img/7.jpeg)
-![gerando o certificado do servidor](/img/8.jpeg)
+![gerando a chave para o certificado do servidor](./img/7.jpeg)
+
+![gerando o certificado do servidor](./img/8.jpeg)
 
 Por fim, se assina e valida o certificado do servidor com a chave da autoridade certificadora:
 
 	sudo openssl x509 -req -in server.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out server.crt -days 360
 
-![assinando e validando o certificado do servidor](/img/9.jpeg)
+![assinando e validando o certificado do servidor](./img/9.jpeg)
 
 Agora, copiamos os seguintes arquivos para a pasta do broker:
 
