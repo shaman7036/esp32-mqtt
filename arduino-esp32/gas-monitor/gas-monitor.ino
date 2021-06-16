@@ -10,6 +10,9 @@
 #include <PubSubClient.h>
 #include <ArduinoJson.h>
 
+// Sketch version
+#define FIRMWARE_VERSION 1
+
 // ADC constants
 #define ADC_MIN 0
 #define ADC_MAX 4095
@@ -26,8 +29,8 @@
 #define MQTT_USERNAME ""
 #define MQTT_PASSWORD ""
 // Topics for subscription and publishing
-#define PUBLISH_TOPIC "utfpr/sensor/gas"
-#define SUBSCRIBE_TOPIC "utfpr/sensor/gas"
+#define PUBLISH_TOPIC "sensor/gas"
+#define SUBSCRIBE_TOPIC "ota/esp32"
 
 const char* client_id = "d45e956a-bd6b-4d94-ae01-026e1568e1a2";
 
@@ -86,7 +89,6 @@ bool mics6814_read(uint16_t* no2, uint16_t* nh3, uint16_t* co){
  * Initializes and connects to wifi
  */
 void wifi_init(){
-  delay(10);
   Serial.print("Connecting to the network: ");
   Serial.println(WIFI_SSID);
   wifi_reconnect();
@@ -115,6 +117,22 @@ void wifi_reconnect(){
 
 
 /*
+ * Processes the messages recieved from the broker
+ * - This is a simple example were the message is stored on a Strig and printed in the terminal
+ */
+void mqtt_callback(char* topic, byte* payload, unsigned int length){
+  String message;
+  for(int i = 0; i < length; i++){
+    message += (char)payload[i];
+  }
+  Serial.print("Message recieved from broker: ");
+  Serial.println(message);
+
+  if(message.equals("update"))
+    ota_update();
+}
+
+/*
  * Sets the broker parameters (address, port and callback)
  */
 void mqtt_init(){
@@ -130,8 +148,8 @@ void mqtt_reconnect(){
   while(!mqtt_client.connected()){
     Serial.print("Connecting to broker... ");
     if(mqtt_client.connect(client_id, MQTT_USERNAME, MQTT_PASSWORD)){
-      mqtt_client.subscribe(SUBSCRIBE_TOPIC);
       Serial.println("Connected");
+      mqtt_client.subscribe(SUBSCRIBE_TOPIC);
     }
     else{
       Serial.print("Failed to connect -> ");
@@ -144,22 +162,6 @@ void mqtt_reconnect(){
       delay(2000);
     }
   }
-}
-
-/*
- * Processes the messages recieved from the broker
- * - This is a simple example were the message is stored on a Strig and printed in the terminal
- */
-void mqtt_callback(char* topic, byte* payload, unsigned int length){
-  char c;
-  String message;
-  int i;
-  for(i = 0; i < length; i++){
-    c = (char)payload[i];
-    message += c;
-  }
-  Serial.print("Message recieved from broker: ");
-  Serial.println(message);
 }
 
 /*
@@ -178,31 +180,59 @@ void mqtt_publish(){
     json_doc["co"] = co;
     char buffer[96];
     serializeJson(json_doc, buffer);
-    mqtt_reconnect();
     Serial.print("Sending message: ");
     Serial.println(buffer);
     mqtt_client.publish(PUBLISH_TOPIC, buffer);
-    mqtt_client.disconnect();
   }
 }
+
 
 /*
  * Update the firmware
  */
 void ota_update(){
-  Serial.println("Updating firmware...");
+  Serial.println("Checking for firmware updates...");
 
-  Update.onProgress([](size_t progress, size_t total) {
-    Serial.print(progress * 100 / total);
-    Serial.print(" ");
-  });
+  mqtt_client.disconnect();
+
+  HTTPClient http_client;
+  http_client.begin(wifi_client, "https://www.dl.dropboxusercontent.com/s/lkt66i94xsvlab2/version_control_file.txt");
+  if (http_client.GET() != HTTP_CODE_OK) {
+    Serial.println("Failed to check for updates");
+    return;
+  }
+  String version_control_file = http_client.getString();
+  http_client.end();
+  version_control_file.trim();
+
+  StaticJsonDocument<200> version_control_doc;
+
+  if (deserializeJson(version_control_doc, version_control_file)){
+    Serial.println("Invalid version control file");
+    return;
+  }
+
+  if(version_control_doc["version"] <= FIRMWARE_VERSION){
+    Serial.println("No updates avaliable");
+    return;
+  }
+  
+  //wifi_client.setTimeout(30000);
+
+  Serial.println("Update avaliable");
+  Serial.println("Updating...");
   
   httpUpdate.rebootOnUpdate(false);
 
-  t_httpUpdate_return update_status = httpUpdate.update(client, "https://internetecoisas.com.br/download/IeC115-OTA/Blink.ino.esp32.bin");
+  /*Update.onProgress([](size_t progress, size_t total){
+    Serial.print(progress * 100 / total);
+    Serial.print(" ");
+  });*/
 
-  switch (update_status) {
-    case HTTP_UPDATE_FAILED: {
+  t_httpUpdate_return update_status = httpUpdate.update(wifi_client, version_control_doc["sketch_url"]);
+
+  switch (update_status){
+    case HTTP_UPDATE_FAILED:{
       String s = httpUpdate.getLastErrorString();
       Serial.println("\nUpdate error: " + s);
     } break;
@@ -228,10 +258,12 @@ void setup() {
 
 // Loop function
 void loop() {
-  if(WiFi.status() != WL_CONNECTED) // If the wifi connection was lost, reconnects
+  if(WiFi.status() != WL_CONNECTED)
     wifi_init();
-  mqtt_publish();
-  // The loop function ensures the mqtt receives messages from the broker on the subscribed topics
+  if (!mqtt_client.connected())
+    mqtt_reconnect();
   mqtt_client.loop();
+  mqtt_publish();
+  ota_update();
   delay(1000 * 10); // Waits 10 seconds
 }
