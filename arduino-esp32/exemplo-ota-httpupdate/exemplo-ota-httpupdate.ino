@@ -8,8 +8,8 @@
 #include <ArduinoJson.h>
 #include <HTTPUpdate.h>
 
-#define WIFI_SSID "Ribeiro_2.4G"
-#define WIFI_PASSWORD "99955015"
+#define WIFI_SSID "..."
+#define WIFI_PASSWORD "..."
 
 #define FIRMWARE_VERSION 1
 
@@ -68,8 +68,6 @@ void ota_update(){
     Serial.println("Não foram encontradas atualizações");
     return;
   }
-  
-  //wifi_client.setTimeout(30000);
 
   Serial.println("Nova versão disponível");
   Serial.println("Atualizando...");

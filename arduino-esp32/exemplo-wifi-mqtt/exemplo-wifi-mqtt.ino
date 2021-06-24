@@ -9,8 +9,8 @@
 #include <PubSubClient.h>
 
 // Credenciais do WiFi
-#define WIFI_SSID "Ribeiro_2.4G"
-#define WIFI_PASSWORD "99955015"
+#define WIFI_SSID "..."
+#define WIFI_PASSWORD "..."
 
 // Endereço e porta do broker
 #define BROKER_ADDRESS "test.mosquitto.org"

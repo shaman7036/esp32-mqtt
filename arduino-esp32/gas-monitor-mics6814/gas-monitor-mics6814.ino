@@ -20,8 +20,8 @@
 #define SAMPLE_DELAY 1000 * 5
 
 // WiFi credentials
-#define WIFI_SSID "Ribeiro_2.4G"
-#define WIFI_PASSWORD "99955015"
+#define WIFI_SSID "..."
+#define WIFI_PASSWORD "..."
 // Server name, domain or ip registed on the certificate and secure port
 #define BROKER_ADDRESS "test.mosquitto.org"
 #define BROKER_PORT 8883
