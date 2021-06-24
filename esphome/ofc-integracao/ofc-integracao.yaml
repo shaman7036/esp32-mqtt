@@ -1,0 +1,59 @@
+esphome:
+  name: school-monitor
+  platform: ESP32
+  board: heltec_wifi_lora_32_V2
+
+wifi:
+  ssid: Ribeiro_2.4G
+  password: "99955015"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  #ap:
+    #ssid: "School-Monitor Fallback Hotspot"
+    #password: "JHkNjxfVy6rS"
+
+#captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+#api:
+
+ota:
+  #password: 
+
+mqtt:
+  broker: "test.mosquitto.org"
+  port: 1883
+  #username: 
+  #password: 
+
+i2c:
+  sda: 4
+  scl: 15
+  scan: True
+
+sensor:
+  - platform: bme280
+    temperature:
+      name: "bme280-temperature"
+      id: temperature
+    pressure:
+      name: "bme280-pressure"
+      id: pressure
+    humidity:
+      name: "bme280-humidity"
+      id: humidity
+    address: 0x76
+    update_interval: 60s
+
+  - platform: ccs811
+    eco2:
+      name: "ccs811-co2"
+      id: co2
+    tvoc:
+      name: "ccs811-tvoc"
+      id: tvoc
+    address: 0x5A
+    update_interval: 60s

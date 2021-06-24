@@ -1,0 +1,70 @@
+esphome:
+  name: gas-monitor
+  platform: ESP32
+  board: heltec_wifi_lora_32
+
+wifi:
+  ssid: "..."
+  password: "..."
+
+# Enable logging
+logger:
+
+mqtt:
+  broker: "test.mosquitto.org"
+  port: 1883
+
+ota:
+  #password:
+  
+font:
+  - file: 'slkscrfont.ttf'
+    id: font1
+    size: 8
+
+i2c:
+  sda: 4
+  scl: 15
+  
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    reset_pin: 16
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(font1), "gas monitor");
+
+      if (id(no2).has_state()) {
+        it.printf(0, 10, id(font1), "NO2: %.2f° V", id(no2).state);
+      }
+
+      if (id(nh3).has_state()) {
+        it.printf(0, 20, id(font1), "NH3: %.2f° V", id(nh3).state);
+      }
+
+      if (id(co).has_state()) {
+        it.printf(0, 30, id(font1), "CO: %.2f° V", id(co).state);
+      }
+
+sensor:
+  - platform: adc
+    pin: 36
+    id: no2
+    name: "NO2"
+    attenuation: 11db
+    update_interval: 10s
+  - platform: adc
+    pin: 38
+    id: nh3
+    name: "NH3"
+    attenuation: 11db
+    update_interval: 10s
+  - platform: adc
+    pin: 39
+    name: "CO"
+    attenuation: 11db
+    id: co
+    update_interval: 10s
+      
+web_server:
+  port: 80
