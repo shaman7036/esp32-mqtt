@@ -1,20 +1,20 @@
 /*
  * Sketch exemplo contendo funções de conexão ao WiFi e ao broker MQTT
- * Obs..: Funcionando apenas na versão 1.0.4 da bilbioteca arduino-esp32, versões mais recentes impossibilitam conexão ao broker (erro -2) -> Todo: Descobrir o motivo
+ * Obs..: Funcionando apenas na porta 1883 (não segura), na porta 8883 impossibilita conexão ao broker (erro -2) -> Todo: Descobrir o motivo
  */
 
 // Bilbiotecas utilizadas
 #include <WiFi.h>
-#include <WiFiClientSecure.h>
+//#include <WiFiClientSecure.h>
 #include <PubSubClient.h>
 
 // Credenciais do WiFi
-#define WIFI_SSID "..."
-#define WIFI_PASSWORD "..."
+#define WIFI_SSID "Ribeiro_2.4G"
+#define WIFI_PASSWORD "99955015"
 
 // Endereço e porta do broker
 #define BROKER_ADDRESS "test.mosquitto.org"
-#define BROKER_PORT 8883
+#define BROKER_PORT 1883
 
 // Usuário e senha para autenticação no broker
 #define MQTT_USERNAME ""
@@ -28,7 +28,7 @@
 const char* client_id = "d45e956a-bd6b-4d94-ae01-026e1568e1a2";
 
 // Inicia um cliente wifi seguro e um cliente mqtt
-WiFiClientSecure wifi_client;
+WiFiClient wifi_client; // Client Secure se for usar TLS
 PubSubClient mqtt_client(wifi_client);
 
 /*
