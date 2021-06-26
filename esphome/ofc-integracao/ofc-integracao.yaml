@@ -32,7 +32,6 @@ mqtt:
 i2c:
   sda: 4
   scl: 15
-  scan: True
 
 sensor:
   - platform: bme280
@@ -57,3 +56,39 @@ sensor:
       id: tvoc
     address: 0x5A
     update_interval: 60s
+
+font:
+  - file: '.\fonts\slkscr.ttf'
+    id: slkscr
+    size: 8
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    reset_pin: 16
+    address: 0x3C
+    lambda: |-
+      it.print(0, 0, id(slkscr), "Monitor de Ambiente");
+
+      if (id(temperature).has_state()) {
+        it.printf(0, 10, id(slkscr), "Temperatura: %.2f °C", id(temperature).state);
+      }
+
+      if (id(pressure).has_state()) {
+        it.printf(0, 20, id(slkscr), "Pressao: %.2f hPa", id(pressure).state);
+      }
+
+      if (id(humidity).has_state()) {
+        it.printf(0, 30, id(slkscr), "Umidade: %.2f %", id(humidity).state);
+      }
+
+      if (id(co2).has_state()) {
+        it.printf(0, 40, id(slkscr), "CO2: %.2f ppm", id(co2).state);
+      }
+
+      if (id(tvoc).has_state()) {
+        it.printf(0, 50, id(slkscr), "Comp. volateis: %.2f ppb", id(tvoc).state);
+      }
+
+web_server:
+  port: 80
