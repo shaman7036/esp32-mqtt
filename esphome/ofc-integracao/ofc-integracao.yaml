@@ -4,8 +4,8 @@ esphome:
   board: heltec_wifi_lora_32_V2
 
 wifi:
-  ssid: Ribeiro_2.4G
-  password: "99955015"
+  ssid: ...
+  password: "..."
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   #ap:

@@ -4,7 +4,6 @@
  */
 
 #include <WiFi.h>
-#include <WiFiClientSecure.h>
 #include <ArduinoJson.h>
 #include <HTTPUpdate.h>
 
@@ -48,11 +47,22 @@ void ota_update(){
   //mqtt_client.disconnect(); // Se usar mqtt deve-se desconectar do broker para não gerar erros no processo de atualização
 
   HTTPClient http_client; // Novo client http
-  http_client.begin(wifi_client, "https://www.dl.dropboxusercontent.com/s/lkt66i94xsvlab2/version_control_file.txt");
-  if (http_client.GET() != HTTP_CODE_OK) {  // Se não foi possível acessar o arquivo de controle de versão mostra um erro
-    Serial.println("Falha ao verificar por atualizações");
+  http_client.begin(wifi_client, "https://dl.dropboxusercontent.com/s/eeu9vhz48pe7l1q/version_control_file.txt");
+  
+  int httpCode = http_client.GET();  // Debug
+  String s = http_client.getString();  //
+  http_client.end(); //
+  s.trim(); //
+  
+  if (httpCode != HTTP_CODE_OK) {  // Se não foi possível acessar o arquivo de controle de versão mostra um erro
+    //log("ERRO HTTP " + String(httpCode) + " " + http_client.errorToString(httpCode));
+    Serial.print("Falha ao verificar por atualizações -> ");
+    Serial.print(String(httpCode));
+    Serial.print(": ");
+    Serial.println(http_client.errorToString(httpCode));
     return;
   }
+  
   String version_control_file = http_client.getString();  // Salva o arquivo JSON de controle de versão em uma String
   http_client.end();  // Fecha a conexão http
   version_control_file.trim();  // Retira os espaços do arquivo
@@ -73,11 +83,6 @@ void ota_update(){
   Serial.println("Atualizando...");
   
   httpUpdate.rebootOnUpdate(false); // Desativa a reinicialização automática do esp32 após atualização
-
-  Update.onProgress([](size_t progress, size_t total){  // Gera uma barra de progresso
-    Serial.print(progress * 100 / total);
-    Serial.print(" ");
-  });
 
   t_httpUpdate_return update_status = httpUpdate.update(wifi_client, version_control_doc["sketch_url"]);  // Atualiza o sketch de acordo com o link contido no arquivo de versionamento
 
@@ -104,5 +109,5 @@ void loop() {
   if(WiFi.status() != WL_CONNECTED)
     wifi_reconnect();
   ota_update();
-  delay(5 * 1000);
+  delay(60 * 1000);
 }
