@@ -43,25 +43,28 @@ sensor:
       name: "ccs811-tvoc"
       id: tvoc
     address: 0x5A
+    temperature: temperature
+    humidity: pressure
+    baseline: 0x93B0
     update_interval: 60s
 
-  - platform: duty_cycle
-    pin: 17
-    name: "dsm501a-1um-particles"
-    id: one_um
-    update_interval: 30s
-    unit_of_measurement: pcs/238ml
-    filters:
-      - lambda: return 1.1*pow(x, 3) - 3.8*pow(x, 2) + 520*x + 0.62;
+#  - platform: duty_cycle
+#    pin: 17
+#    name: "dsm501a-1um-particles"
+#    id: one_um
+#    update_interval: 60s
+#    unit_of_measurement: pcs/238ml
+#    filters:
+#      - lambda: return 1.1*pow(x, 3) - 3.8*pow(x, 2) + 520*x + 0.62;
   
-  - platform: duty_cycle
-    pin: 36
-    name: "dsm501a-25um-particles"
-    id: twofive_um
-    update_interval: 30s
-    unit_of_measurement: pcs/238ml
-    filters:
-      - lambda: return 1.1*pow(x, 3) - 3.8*pow(x, 2) + 520*x + 0.62;
+#  - platform: duty_cycle
+#    pin: 36
+#    name: "dsm501a-25um-particles"
+#    id: twofive_um
+#    update_interval: 60s
+#    unit_of_measurement: pcs/238ml
+#    filters:
+#      - lambda: return 1.1*pow(x, 3) - 3.8*pow(x, 2) + 520*x + 0.62;
 
 font:
   - file: '.\fonts\slkscr.ttf'
@@ -94,9 +97,9 @@ display:
         it.printf(0, 40, id(slkscr), "TVOC: %.2f ppb", id(tvoc).state);
       }
 
-      if (id(one_um).has_state() && id(twofive_um).has_state()) {
-        it.printf(0, 50, id(slkscr), "1um %.2f, 2.5um %.2f pcs/238ml", id(one_um).state, id(twofive_um).state);
-      }
+#      if (id(one_um).has_state() && id(twofive_um).has_state()) {
+#        it.printf(0, 50, id(slkscr), "1um %.2f, 2.5um %.2f pcs/238ml", id(one_um).state, id(twofive_um).state);
+#      }
       
 
 web_server:
