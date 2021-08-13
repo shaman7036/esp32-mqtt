@@ -22,7 +22,6 @@ def on_message(client, userdata, msg):
 
     if msg.topic == TEMP:
         Temperature(value=message_dict).save()
-        #print("temperature saved")
     elif msg.topic == HUMIDITY:
         Humidity(value=message_dict).save()
     elif msg.topic == PRESSURE:
@@ -36,4 +35,3 @@ client = mqtt.Client("django_paho_mqtt_subscriber")
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("test.mosquitto.org", 1883)
-
