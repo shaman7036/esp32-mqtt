@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <canvas id="temperatureChart" width="300" height="300"></canvas>
+  <table>
+    <tr>
+        <td>
+            <canvas id="temperatureChart" width="300" height="300"></canvas>
+        </td>
+        <!--<td>
+            <canvas id="humidityChart" width="300" height="300"></canvas>
+        </td>-->
+    </tr>
+  </table>
 {% endblock %}
 
 {% block scripts %}
@@ -13,7 +22,7 @@ var temperatureChart = new Chart(ctx, {
     type: 'line',
     data: {
         datasets: [{
-            label: 'values',
+            label: 'Temperatura',
             data: values,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
@@ -35,6 +44,7 @@ var temperatureChart = new Chart(ctx, {
         }]
     },
     options: {
+        responsive: true,
         scales: {
             yAxes: [{
                 ticks: {
