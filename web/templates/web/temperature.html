@@ -6,24 +6,45 @@
         <td>
             <canvas id="temperatureChart" width="300" height="300"></canvas>
         </td>
-        <!--<td>
+        <td>
             <canvas id="humidityChart" width="300" height="300"></canvas>
-        </td>-->
+        </td>
+        <td>
+            <canvas id="pressureChart" width="300" height="300"></canvas>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <canvas id="co2Chart" width="300" height="300"></canvas>
+        </td>
+        <td>
+            <canvas id="tvocChart" width="300" height="300"></canvas>
+        </td>
     </tr>
   </table>
 {% endblock %}
 
 {% block scripts %}
 <script>
-var ctx = document.getElementById("temperatureChart");
-var values = JSON.parse('{{ values|safe }}');
 
-var temperatureChart = new Chart(ctx, {
+var ctx_temp = document.getElementById("temperatureChart");
+var ctx_humi = document.getElementById("humidityChart");
+var ctx_press = document.getElementById("pressureChart");
+var ctx_co2 = document.getElementById("co2Chart");
+var ctx_tvoc = document.getElementById("tvocChart");
+
+var temp_values = JSON.parse('{{ temp_values|safe }}');
+var humi_values = JSON.parse('{{ humi_values|safe }}');
+var press_values = JSON.parse('{{ press_values|safe }}');
+var co2_values = JSON.parse('{{ co2_values|safe }}');
+var tvoc_values = JSON.parse('{{ tvoc_values|safe }}');
+
+var temperatureChart = new Chart(ctx_temp, {
     type: 'line',
     data: {
         datasets: [{
-            label: 'Temperatura',
-            data: values,
+            label: 'Temperatura (°C)',
+            data: temp_values,
             backgroundColor: [
                 'rgba(255, 99, 132, 0.2)',
                 'rgba(54, 162, 235, 0.2)',
@@ -54,5 +75,154 @@ var temperatureChart = new Chart(ctx, {
         }
     }
 });
+
+var humidityChart = new Chart(ctx_humi, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Umidade (%)',
+            data: humi_values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
+var pressureChart = new Chart(ctx_press, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'Pressão (hPa)',
+            data: press_values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
+var co2Chart = new Chart(ctx_co2, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'CO2 (ppm)',
+            data: co2_values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
+var tvocChart = new Chart(ctx_tvoc, {
+    type: 'line',
+    data: {
+        datasets: [{
+            label: 'TVOC (ppb)',
+            data: tvoc_values,
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255,99,132,1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero:true
+                }
+            }]
+        }
+    }
+});
+
 </script>
 {% endblock %}
