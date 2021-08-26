@@ -20,18 +20,26 @@ def on_message(client, userdata, msg):
 
     message_dict = json.loads(msg.payload)
 
-    if msg.topic == TEMP:
-        Temperature(value=message_dict).save()
-    elif msg.topic == HUMIDITY:
-        Humidity(value=message_dict).save()
-    elif msg.topic == PRESSURE:
-        Pressure(value=message_dict).save()
-    elif msg.topic == CO2:
-        Co2(value=message_dict).save()
-    elif msg.topic == TVOC:
-        Tvoc(value=message_dict).save()
+    print(msg.retain)
 
-client = mqtt.Client("django_paho_mqtt_subscriber")
+    if msg.retain == False:
+        if msg.topic == TEMP:
+            Temperature(value=message_dict).save()
+            print("temperature saved")
+        elif msg.topic == HUMIDITY:
+            Humidity(value=message_dict).save()
+            print("humidity saved")
+        elif msg.topic == PRESSURE:
+            Pressure(value=message_dict).save()
+            print("pressure saved")
+        elif msg.topic == CO2:
+            Co2(value=message_dict).save()
+            print("co2 saved")
+        elif msg.topic == TVOC:
+            Tvoc(value=message_dict).save()
+            print("tvoc saved")
+
+client = mqtt.Client(client_id="django_paho_mqtt_subscriber", clean_session=False, userdata=None)
 client.on_connect = on_connect
 client.on_message = on_message
 client.connect("test.mosquitto.org", 1883)
