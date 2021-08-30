@@ -7,35 +7,35 @@
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Temperatura</p>
-                    <canvas id="temperatureChart" width="800" height="300"></canvas>
+                    <canvas id="temperatureChart" width="1200" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Umidade</p>
-                    <canvas id="humidityChart" width="800" height="300"></canvas>
+                    <canvas id="humidityChart" width="1200" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Pressão Atmosférica</p>
-                    <canvas id="pressureChart" width="800" height="300"></canvas>
+                    <canvas id="pressureChart" width="1200" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Concentração de CO2</p>
-                    <canvas id="co2Chart" width="800" height="300"></canvas>
+                    <canvas id="co2Chart" width="1200" height="300"></canvas>
                 </td>
             </tr>
                 
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Concentração de TVOC</p>
-                    <canvas id="tvocChart" width="800" height="300"></canvas>
+                    <canvas id="tvocChart" width="1200" height="300"></canvas>
                 </td>
             </tr>
         </table>
@@ -51,14 +51,20 @@
     var ctx_co2 = document.getElementById("co2Chart");
     var ctx_tvoc = document.getElementById("tvocChart");
 
-    //var temp_values = JSON.parse('{{ temp_values|safe }}');
-    var temp_values = [28.5, 30.2, 32.3, 30.5, 29.3, 28.5, 27.9, 26.2, 25.3, 23.0];
-    var temp_times = ['11:00', '11:30', '12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30'];
+    var temp_values = JSON.parse('{{ temp_values|safe }}');
+    var temp_times = JSON.parse('{{ temp_times|safe }}');
 
     var humi_values = JSON.parse('{{ humi_values|safe }}');
+    var humi_times = JSON.parse('{{ humi_times|safe }}');
+
     var press_values = JSON.parse('{{ press_values|safe }}');
+    var press_times = JSON.parse('{{ press_times|safe }}');
+
     var co2_values = JSON.parse('{{ co2_values|safe }}');
+    var co2_times = JSON.parse('{{ co2_times|safe }}');
+
     var tvoc_values = JSON.parse('{{ tvoc_values|safe }}');
+    var tvoc_times = JSON.parse('{{ tvoc_times|safe }}');
 
     var temperatureChart = new Chart(ctx_temp, {
         type: 'line',
@@ -87,6 +93,7 @@
     var humidityChart = new Chart(ctx_humi, {
         type: 'line',
         data: {
+            labels: humi_times,
             datasets: [{
                 label: 'Umidade (%)',
                 data: humi_values,
@@ -110,6 +117,7 @@
     var pressureChart = new Chart(ctx_press, {
         type: 'line',
         data: {
+            labels: press_times,
             datasets: [{
                 label: 'Pressão (hPa)',
                 data: press_values,
@@ -133,6 +141,7 @@
     var co2Chart = new Chart(ctx_co2, {
         type: 'line',
         data: {
+            labels: co2_times,
             datasets: [{
                 label: 'CO2 (ppm)',
                 data: co2_values,
@@ -156,6 +165,7 @@
     var tvocChart = new Chart(ctx_tvoc, {
         type: 'line',
         data: {
+            labels: tvoc_times,
             datasets: [{
                 label: 'TVOC (ppb)',
                 data: tvoc_values,
