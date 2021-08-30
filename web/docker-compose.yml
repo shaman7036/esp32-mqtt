@@ -1,4 +1,4 @@
-version: "3.9"
+version: "3.5"
    
 services:
   db:
@@ -10,6 +10,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     ports:
       - "5432:5432"
+  
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
