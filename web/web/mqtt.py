@@ -7,21 +7,21 @@ PRESSURE = "school-monitor/sensor/bme280-pressure/state"
 CO2 = "school-monitor/sensor/ccs811-co2/state"
 TVOC = "school-monitor/sensor/ccs811-tvoc/state"
 
-MQTT_TOPICS = [(TEMP, 0), (HUMIDITY, 0),
+MQTT_TOPICS = [ (TEMP, 0), (HUMIDITY, 0),
               (PRESSURE, 0), (CO2, 0),
-              (TVOC, 0)]
+              (TVOC, 0) ]
 
 def on_connect(client, userdata, flags, rc):
     print("CONNACK received with code %d." % (rc))
     client.subscribe(MQTT_TOPICS)
 
 def on_subscribe(client, userdata, mid, granted_qos):
-    print("Subscribed: "+str(mid)+" "+str(granted_qos))
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 def on_message(client, userdata, msg):
     from .models import Temperature, Humidity, Pressure, Tvoc, Co2
 
-    print(msg.retain)
+    print(msg.payload)
 
     message_dict = json.loads(msg.payload)
 
@@ -46,5 +46,7 @@ def run_client():
     client.on_connect = on_connect
     client.on_subscribe = on_subscribe
     client.on_message = on_message
-    client.connect_async(host="test.mosquitto.org", port=1883, keepalive=60, bind_address="")
+
+    client.username_pw_set(username="user1",password="gabriel")
+    client.connect_async(host="iot.coenc.ap.utfpr.edu.br", port=1883, keepalive=60, bind_address="")
     client.loop_start()
