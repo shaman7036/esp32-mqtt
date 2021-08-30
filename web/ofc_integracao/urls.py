@@ -7,5 +7,5 @@ mqtt.run_client()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('temperature/', views.temperature, name='temperature'),
+    path('graficos/', views.graphs),
 ]
