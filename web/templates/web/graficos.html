@@ -7,35 +7,50 @@
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Temperatura</p>
-                    <canvas id="temperatureChart" width="1200" height="300"></canvas>
+                    <canvas id="temperatureChart" width="900" height="300"></canvas>
+                </td>
+                <td class="align-middle"> 
+                    <canvas id="temperatureGauge" width="300" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Umidade</p>
-                    <canvas id="humidityChart" width="1200" height="300"></canvas>
+                    <canvas id="humidityChart" width="900" height="300"></canvas>
+                </td>
+                <td class="align-middle"> 
+                    <canvas id="humidityGauge" width="300" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Pressão Atmosférica</p>
-                    <canvas id="pressureChart" width="1200" height="300"></canvas>
+                    <canvas id="pressureChart" width="900" height="300"></canvas>
+                </td>
+                <td class="align-middle"> 
+                    <canvas id="pressureGauge" width="300" height="300"></canvas>
                 </td>
             </tr>
         
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Concentração de CO2</p>
-                    <canvas id="co2Chart" width="1200" height="300"></canvas>
+                    <canvas id="co2Chart" width="900" height="300"></canvas>
+                </td>
+                <td class="align-middle"> 
+                    <canvas id="co2Gauge" width="300" height="300"></canvas>
                 </td>
             </tr>
                 
             <tr>
                 <td>
                     <p class="h3 text-center">Gráfico de Concentração de TVOC</p>
-                    <canvas id="tvocChart" width="1200" height="300"></canvas>
+                    <canvas id="tvocChart" width="900" height="300"></canvas>
+                </td>
+                <td class="align-middle"> 
+                    <canvas id="tvocGauge" width="300" height="300"></canvas>
                 </td>
             </tr>
         </table>
@@ -46,10 +61,15 @@
 {% block scripts %}
 <script>
     var ctx_temp = document.getElementById("temperatureChart");
+    var ctx_temp_gauge = document.getElementById("temperatureGauge");
     var ctx_humi = document.getElementById("humidityChart");
+    var ctx_humi_gauge = document.getElementById("humidityGauge");
     var ctx_press = document.getElementById("pressureChart");
+    var ctx_press_gauge = document.getElementById("pressureGauge");
     var ctx_co2 = document.getElementById("co2Chart");
+    var ctx_co2_gauge = document.getElementById("co2Gauge");
     var ctx_tvoc = document.getElementById("tvocChart");
+    var ctx_tvoc_gauge = document.getElementById("tvocGauge");
 
     var temp_values = JSON.parse('{{ temp_values|safe }}');
     var temp_times = JSON.parse('{{ temp_times|safe }}');
@@ -90,6 +110,33 @@
         }
     });
 
+    var temperatureGauge = new Chart(ctx_temp_gauge, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [temp_values[temp_values.length - 1], 65 - temp_values[temp_values.length - 1]],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(54, 162, 235)',
+                    'rgba(255, 205, 86)' 
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80,
+            tooltips: {enabled: false},
+            hover: {mode: null},
+            title: {
+                display: true,
+                position: "bottom",
+                text: temp_values[temp_values.length - 1] + '° C',
+                fontSize: 20
+            },
+        }
+    });
+
     var humidityChart = new Chart(ctx_humi, {
         type: 'line',
         data: {
@@ -111,6 +158,33 @@
                     }
                 }]
             }
+        }
+    });
+
+    var humidityGauge = new Chart(ctx_humi_gauge, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [humi_values[humi_values.length - 1], 100 - humi_values[humi_values.length - 1]],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(54, 162, 235)',
+                    'rgba(255, 205, 86)' 
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80,
+            tooltips: {enabled: false},
+            hover: {mode: null},
+            title: {
+                display: true,
+                position: "bottom",
+                text: humi_values[humi_values.length - 1] + ' %',
+                fontSize: 20
+            },
         }
     });
 
@@ -138,6 +212,33 @@
         }
     });
 
+    var pressureGauge = new Chart(ctx_press_gauge, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [press_values[press_values.length - 1], 1100 - press_values[press_values.length - 1]],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(54, 162, 235)',
+                    'rgba(255, 205, 86)' 
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80,
+            tooltips: {enabled: false},
+            hover: {mode: null},
+            title: {
+                display: true,
+                position: "bottom",
+                text: press_values[press_values.length - 1] + ' hPa',
+                fontSize: 20
+            },
+        }
+    });
+
     var co2Chart = new Chart(ctx_co2, {
         type: 'line',
         data: {
@@ -162,6 +263,33 @@
         }
     });
 
+    var co2Gauge = new Chart(ctx_co2_gauge, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [co2_values[co2_values.length - 1], 8192 - co2_values[co2_values.length - 1]],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(54, 162, 235)',
+                    'rgba(255, 205, 86)' 
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80,
+            tooltips: {enabled: false},
+            hover: {mode: null},
+            title: {
+                display: true,
+                position: "bottom",
+                text: co2_values[co2_values.length - 1] + ' ppm',
+                fontSize: 20
+            },
+        }
+    });
+
     var tvocChart = new Chart(ctx_tvoc, {
         type: 'line',
         data: {
@@ -183,6 +311,33 @@
                     }
                 }]
             }
+        }
+    });
+
+    var tvocGauge = new Chart(ctx_tvoc_gauge, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [tvoc_values[tvoc_values.length - 1], 1187 - tvoc_values[tvoc_values.length - 1]],
+                backgroundColor: [
+                    'rgba(255, 99, 132)',
+                    'rgba(54, 162, 235)',
+                    'rgba(255, 205, 86)' 
+                ]
+            }]
+        },
+        options: {
+            circumference: Math.PI,
+            rotation: Math.PI,
+            cutoutPercentage: 80,
+            tooltips: {enabled: false},
+            hover: {mode: null},
+            title: {
+                display: true,
+                position: "bottom",
+                text: tvoc_values[tvoc_values.length - 1] + ' ppb',
+                fontSize: 20
+            },
         }
     });
 </script>
