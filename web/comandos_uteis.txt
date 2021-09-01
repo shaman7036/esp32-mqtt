@@ -1,0 +1,19 @@
+Git:
+
+Como pegar as modificações do git:
+git pull origin main
+
+
+Docker:
+
+Como rodar o servidor:
+docker-compose up —build
+
+Como rodar o servidor em paralelo:
+docker-compose up -d
+
+Como parar o servidor:
+docker-compose down
+
+Como aplicar migrations:
+docker-compose exec web python manage.py migrate
